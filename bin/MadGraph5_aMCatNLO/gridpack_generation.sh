@@ -55,11 +55,11 @@ if [ -z "$PRODHOME" ]; then
   PRODHOME=`pwd`
 fi 
 
-if [ ! -z ${CMSSW_BASE} ]; then
-  echo "Error: This script must be run in a clean environment as it sets up CMSSW itself.  You already have a CMSSW environment set up for ${CMSSW_VERSION}."
-  echo "Please try again from a clean shell."
-  if [ "${BASH_SOURCE[0]}" != "${0}" ]; then return 1; else exit 1; fi
-fi
+#if [ ! -z ${CMSSW_BASE} ]; then
+#  echo "Error: This script must be run in a clean environment as it sets up CMSSW itself.  You already have a CMSSW environment set up for ${CMSSW_VERSION}."
+#  echo "Please try again from a clean shell."
+#  if [ "${BASH_SOURCE[0]}" != "${0}" ]; then return 1; else exit 1; fi
+#fi
 
 #catch unset variables
 set -u
@@ -101,7 +101,7 @@ RUNHOME=`pwd`
 
 LOGFILE=${RUNHOME}/${name}.log
 LOGFILE_NAME=${LOGFILE/.log/}
-exec &> ${LOGFILE}
+#exec &> ${LOGFILE}
 #if [ "${name}" != "interactive" ]; then
 #  mkfifo ${LOGFILE}.pipe
 #  tee < ${LOGFILE}.pipe ${LOGFILE} &
@@ -174,11 +174,12 @@ if [ ! -d ${AFS_GEN_FOLDER}/${name}_gridpack ]; then
   ############################
   #Create a workplace to work#
   ############################
-  scram project -n ${name}_gridpack CMSSW ${RELEASE} ;
-  if [ ! -d ${name}_gridpack ]; then  
-    if [ "${BASH_SOURCE[0]}" != "${0}" ]; then return 1; else exit 1; fi
-  fi
+  #scram project -n ${name}_gridpack CMSSW ${RELEASE} ;
+  #if [ ! -d ${name}_gridpack ]; then  
+  #  if [ "${BASH_SOURCE[0]}" != "${0}" ]; then return 1; else exit 1; fi
+  #fi
   
+  mkdir ${name}_gridpack
   cd ${name}_gridpack ; mkdir -p work ; cd work
   WORKDIR=`pwd`
   eval `scram runtime -sh`
@@ -282,7 +283,8 @@ if [ ! -d ${AFS_GEN_FOLDER}/${name}_gridpack ]; then
       #get needed BSM model
       if [[ $model = *[!\ ]* ]]; then
         echo "Loading extra model $model"
-        wget --no-verbose --no-check-certificate https://cms-project-generators.web.cern.ch/cms-project-generators/$model	
+        cp $CMSSW_BASE/src/genproductions/bin/MadGraph5_aMCatNLO/DMsimp_externalmodels/$model .
+        #wget --no-verbose --no-check-certificate https://cms-project-generators.web.cern.ch/cms-project-generators/$model	
         cd models
         if [[ $model == *".zip"* ]]; then
           unzip ../$model
