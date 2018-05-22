@@ -182,7 +182,7 @@ if [ ! -d ${AFS_GEN_FOLDER}/${name}_gridpack ]; then
   mkdir ${name}_gridpack
   cd ${name}_gridpack ; mkdir -p work ; cd work
   WORKDIR=`pwd`
-  eval `scram runtime -sh`
+  #eval `scram runtime -sh`
 
 
   #############################################
@@ -201,15 +201,16 @@ if [ ! -d ${AFS_GEN_FOLDER}/${name}_gridpack ]; then
 
   # #if lhapdf6 external is available then above points to lhapdf5 and needs to be overridden
   # LHAPDF6TOOLFILE=$CMSSW_BASE/config/toolbox/$SCRAM_ARCH/tools/available/lhapdf6.xml
-  #   
+
   # if [ -e $LHAPDF6TOOLFILE ]; then
   #   LHAPDFCONFIG=`cat $LHAPDF6TOOLFILE | grep "<environment name=\"LHAPDF6_BASE\"" | cut -d \" -f 4`/bin/lhapdf-config
   # else
   #   LHAPDFCONFIG=`echo "$LHAPDF_DATA_PATH/../../bin/lhapdf-config"`
   # fi
+  # echo $LHAPDFCONFIG
+  LHAPDFCONFIG="/cvmfs/cms.cern.ch/slc6_amd64_gcc481/external/lhapdf/6.2.1/bin/lhapdf-config"
 
   #make sure env variable for pdfsets points to the right place
-  LHAPDFCONFIG="${PRODHOME}/lhapdf/bin/lhapdf-config"
   export LHAPDF_DATA_PATH=`$LHAPDFCONFIG --datadir`
 
   LHAPDFINCLUDES=`$LHAPDFCONFIG --incdir`
@@ -406,18 +407,19 @@ elif [ "${jobstep}" = "INTEGRATE" ] || [ "${jobstep}" = "ALL" ]; then
   fi
   cd $WORKDIR
 
-  eval `scram runtime -sh`
+  #eval `scram runtime -sh`
   export BOOSTINCLUDES=`scram tool tag boost INCLUDE`
 
-  #LHAPDFCONFIG=`echo "$LHAPDF_DATA_PATH/../../bin/lhapdf-config"`
+  # #LHAPDFCONFIG=`echo "$LHAPDF_DATA_PATH/../../bin/lhapdf-config"`
 
-  #if lhapdf6 external is available then above points to lhapdf5 and needs to be overridden
-  LHAPDF6TOOLFILE=$CMSSW_BASE/config/toolbox/$SCRAM_ARCH/tools/available/lhapdf6.xml
-  if [ -e $LHAPDF6TOOLFILE ]; then
-    LHAPDFCONFIG=`cat $LHAPDF6TOOLFILE | grep "<environment name=\"LHAPDF6_BASE\"" | cut -d \" -f 4`/bin/lhapdf-config
-  else
-    LHAPDFCONFIG=`echo "$LHAPDF_DATA_PATH/../../bin/lhapdf-config"`
-  fi
+  # #if lhapdf6 external is available then above points to lhapdf5 and needs to be overridden
+  # LHAPDF6TOOLFILE=$CMSSW_BASE/config/toolbox/$SCRAM_ARCH/tools/available/lhapdf6.xml
+  # if [ -e $LHAPDF6TOOLFILE ]; then
+  #   LHAPDFCONFIG=`cat $LHAPDF6TOOLFILE | grep "<environment name=\"LHAPDF6_BASE\"" | cut -d \" -f 4`/bin/lhapdf-config
+  # else
+  #   LHAPDFCONFIG=`echo "$LHAPDF_DATA_PATH/../../bin/lhapdf-config"`
+  # fi
+  LHAPDFCONFIG="/cvmfs/cms.cern.ch/slc6_amd64_gcc481/external/lhapdf/6.2.1/bin/lhapdf-config"
 
   #make sure env variable for pdfsets points to the right place
   export LHAPDF_DATA_PATH=`$LHAPDFCONFIG --datadir`  
