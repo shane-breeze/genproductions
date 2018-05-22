@@ -285,8 +285,8 @@ if [ ! -d ${AFS_GEN_FOLDER}/${name}_gridpack ]; then
       #get needed BSM model
       if [[ $model = *[!\ ]* ]]; then
         echo "Loading extra model $model"
-        cp ${PRODHOME}/DMsimp_externalmodels/$model .
-        #wget --no-verbose --no-check-certificate https://cms-project-generators.web.cern.ch/cms-project-generators/$model	
+        #cp ${PRODHOME}/DMsimp_externalmodels/$model .
+        wget --no-verbose --no-check-certificate https://cms-project-generators.web.cern.ch/cms-project-generators/$model	
         cd models
         if [[ $model == *".zip"* ]]; then
           unzip ../$model
@@ -354,11 +354,10 @@ if [ ! -d ${AFS_GEN_FOLDER}/${name}_gridpack ]; then
   sed -i '$ a display multiparticles' ${name}_proc_card.dat
   ./$MGBASEDIRORIG/bin/mg5_aMC ${name}_proc_card.dat
  
-  #is5FlavorScheme=0
-  #if tail -n 20 $LOGFILE | grep -q -e "^p *=.*b\~.*b" -e "^p *=.*b.*b\~"; then 
-  #  is5FlavorScheme=1
-  #fi
-  is5FlavourScheme=1 # my models are always 5f
+  is5FlavorScheme=0
+  if tail -n 20 $LOGFILE | grep -q -e "^p *=.*b\~.*b" -e "^p *=.*b.*b\~"; then 
+    is5FlavorScheme=1
+  fi
 
   #*FIXME* workaround for broken set cluster_queue handling
   if [ "$queue" == "condor" ]; then
@@ -391,14 +390,13 @@ elif [ "${jobstep}" = "INTEGRATE" ] || [ "${jobstep}" = "ALL" ]; then
   echo "Reusing existing directory assuming generated code already exists"
   echo "WARNING: If you changed the process card you need to clean the folder and run from scratch"
 
-  #if [ "$is5FlavorScheme" -eq -1 ]; then
-  #  if cat $LOGFILE_NAME*.log | grep -q -e "^p *=.*b\~.*b" -e "^p *=.*b.*b\~"; then 
-  #      is5FlavorScheme=1
-  #  else
-  #      is5FlavorScheme=0
-  #  fi 
-  #fi
-  is5FlavorScheme=1
+  if [ "$is5FlavorScheme" -eq -1 ]; then
+    if cat $LOGFILE_NAME*.log | grep -q -e "^p *=.*b\~.*b" -e "^p *=.*b.*b\~"; then 
+        is5FlavorScheme=1
+    else
+        is5FlavorScheme=0
+    fi 
+  fi
   
   cd $AFS_GEN_FOLDER
   
@@ -745,11 +743,11 @@ if [ -e $CARDSDIR/${name}_externaltarball.dat ]; then
 fi
 
 
-# echo "Saving log file(s)"
-# #copy log file
-# for i in ${LOGFILE_NAME}*.log; do 
-#     cp $i ${i/$LOGFILE_NAME/gridpack_generation}; 
-# done
+echo "Saving log file(s)"
+#copy log file
+for i in ${LOGFILE_NAME}*.log; do 
+    cp $i ${i/$LOGFILE_NAME/gridpack_generation}; 
+done
 
 
 
