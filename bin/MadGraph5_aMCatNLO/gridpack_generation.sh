@@ -199,16 +199,17 @@ if [ ! -d ${AFS_GEN_FOLDER}/${name}_gridpack ]; then
   cd $MGBASEDIRORIG
   cat $PRODHOME/patches/*.patch | patch -p1
 
-  #if lhapdf6 external is available then above points to lhapdf5 and needs to be overridden
-  LHAPDF6TOOLFILE=$CMSSW_BASE/config/toolbox/$SCRAM_ARCH/tools/available/lhapdf6.xml
-    
-  if [ -e $LHAPDF6TOOLFILE ]; then
-    LHAPDFCONFIG=`cat $LHAPDF6TOOLFILE | grep "<environment name=\"LHAPDF6_BASE\"" | cut -d \" -f 4`/bin/lhapdf-config
-  else
-    LHAPDFCONFIG=`echo "$LHAPDF_DATA_PATH/../../bin/lhapdf-config"`
-  fi
+  # #if lhapdf6 external is available then above points to lhapdf5 and needs to be overridden
+  # LHAPDF6TOOLFILE=$CMSSW_BASE/config/toolbox/$SCRAM_ARCH/tools/available/lhapdf6.xml
+  #   
+  # if [ -e $LHAPDF6TOOLFILE ]; then
+  #   LHAPDFCONFIG=`cat $LHAPDF6TOOLFILE | grep "<environment name=\"LHAPDF6_BASE\"" | cut -d \" -f 4`/bin/lhapdf-config
+  # else
+  #   LHAPDFCONFIG=`echo "$LHAPDF_DATA_PATH/../../bin/lhapdf-config"`
+  # fi
 
   #make sure env variable for pdfsets points to the right place
+  LHAPDFCONFIG="${PRODHOME}/lhapdf/bin/lhapdf-config"
   export LHAPDF_DATA_PATH=`$LHAPDFCONFIG --datadir`
 
   LHAPDFINCLUDES=`$LHAPDFCONFIG --incdir`
@@ -283,7 +284,7 @@ if [ ! -d ${AFS_GEN_FOLDER}/${name}_gridpack ]; then
       #get needed BSM model
       if [[ $model = *[!\ ]* ]]; then
         echo "Loading extra model $model"
-        cp $CMSSW_BASE/src/genproductions/bin/MadGraph5_aMCatNLO/DMsimp_externalmodels/$model .
+        cp ${PRODHOME}/DMsimp_externalmodels/$model .
         #wget --no-verbose --no-check-certificate https://cms-project-generators.web.cern.ch/cms-project-generators/$model	
         cd models
         if [[ $model == *".zip"* ]]; then
