@@ -39,4 +39,4 @@ define p = 21 2 4 1 3 -2 -4 -1 -3 5 -5 # pass to 5 flavors
 define j = p
 generate       p p  > xd xd~ j   / h w+ w- z a [QCD]
 add process    p p  > xd xd~ j j / h w+ w- z a [QCD]
-output A12JToChiChi_MA-1000_MChi-200
+output A12JToChiChi_MA-1000_MChi-750

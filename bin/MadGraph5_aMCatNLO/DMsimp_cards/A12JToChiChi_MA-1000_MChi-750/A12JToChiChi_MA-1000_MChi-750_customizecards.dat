@@ -1,4 +1,4 @@
 # change mass parameters
 set param_card mass 55 1000
-set param_card mass 18 450
+set param_card mass 18 750
 set param_card decay 55 auto
