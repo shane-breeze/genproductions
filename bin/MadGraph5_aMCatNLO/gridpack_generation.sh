@@ -55,11 +55,11 @@ if [ -z "$PRODHOME" ]; then
   PRODHOME=`pwd`
 fi 
 
-#if [ ! -z ${CMSSW_BASE} ]; then
-#  echo "Error: This script must be run in a clean environment as it sets up CMSSW itself.  You already have a CMSSW environment set up for ${CMSSW_VERSION}."
-#  echo "Please try again from a clean shell."
-#  if [ "${BASH_SOURCE[0]}" != "${0}" ]; then return 1; else exit 1; fi
-#fi
+if [ ! -z ${CMSSW_BASE} ]; then
+  echo "Error: This script must be run in a clean environment as it sets up CMSSW itself.  You already have a CMSSW environment set up for ${CMSSW_VERSION}."
+  echo "Please try again from a clean shell."
+  if [ "${BASH_SOURCE[0]}" != "${0}" ]; then return 1; else exit 1; fi
+fi
 
 #catch unset variables
 set -u
@@ -174,15 +174,15 @@ if [ ! -d ${AFS_GEN_FOLDER}/${name}_gridpack ]; then
   ############################
   #Create a workplace to work#
   ############################
-  #scram project -n ${name}_gridpack CMSSW ${RELEASE} ;
-  #if [ ! -d ${name}_gridpack ]; then  
-  #  if [ "${BASH_SOURCE[0]}" != "${0}" ]; then return 1; else exit 1; fi
-  #fi
+  scram project -n ${name}_gridpack CMSSW ${RELEASE} ;
+  if [ ! -d ${name}_gridpack ]; then  
+    if [ "${BASH_SOURCE[0]}" != "${0}" ]; then return 1; else exit 1; fi
+  fi
   
-  mkdir ${name}_gridpack
+  mkdir -p ${name}_gridpack
   cd ${name}_gridpack ; mkdir -p work ; cd work
   WORKDIR=`pwd`
-  #eval `scram runtime -sh`
+  eval `scram runtime -sh`
 
 
   #############################################
@@ -283,25 +283,25 @@ if [ ! -d ${AFS_GEN_FOLDER}/${name}_gridpack ]; then
     sed 's:#.*$::g' $CARDSDIR/${name}_extramodels.dat | while read model
     do
       #get needed BSM model
-      if [[ $model = *[!\ ]* ]]; then
-        echo "Loading extra model $model"
-        #cp ${PRODHOME}/DMsimp_externalmodels/$model .
-        wget --no-verbose --no-check-certificate https://cms-project-generators.web.cern.ch/cms-project-generators/$model	
-        cd models
-        if [[ $model == *".zip"* ]]; then
-          unzip ../$model
-        elif [[ $model == *".tgz"* ]]; then
-          tar zxvf ../$model
-        elif [[ $model == *".tar"* ]]; then
-          tar xavf ../$model
-        else 
-          echo "A BSM model is specified but it is not in a standard archive (.zip or .tar)"
-        fi
-        cd ..
+      #if [[ $model = *[!\ ]* ]]; then
+      echo "Loading extra model $model"
+      wget --no-verbose --no-check-certificate https://cms-project-generators.web.cern.ch/cms-project-generators/$model	
+      cd models
+      if [[ $model == *".zip"* ]]; then
+        unzip ../$model
+      elif [[ $model == *".tgz"* ]]; then
+        tar zxvf ../$model
+      elif [[ $model == *".tar"* ]]; then
+        tar xavf ../$model
+      else 
+        echo "A BSM model is specified but it is not in a standard archive (.zip or .tar)"
       fi
+      cd ..
+      #fi
     done
   fi
 
+  ls -l .
   cd $WORKDIR
   
   if [ "$name" == "interactive" ]; then
@@ -407,7 +407,7 @@ elif [ "${jobstep}" = "INTEGRATE" ] || [ "${jobstep}" = "ALL" ]; then
   fi
   cd $WORKDIR
 
-  #eval `scram runtime -sh`
+  eval `scram runtime -sh`
   export BOOSTINCLUDES=`scram tool tag boost INCLUDE`
 
   # #LHAPDFCONFIG=`echo "$LHAPDF_DATA_PATH/../../bin/lhapdf-config"`
@@ -769,7 +769,7 @@ if [ -e $CARDSDIR/${name}_externaltarball.dat ]; then
 fi
 XZ_OPT="$XZ_OPT" tar -cJpsf ${PRODHOME}/${name}_${scram_arch}_${cmssw_version}_tarball.tar.xz mgbasedir process runcmsgrid.sh gridpack_generation*.log InputCards $EXTRA_TAR_ARGS
 
-#mv ${name}_${scram_arch}_${cmssw_version}_tarball.tar.xz ${PRODHOME}/${name}_${scram_arch}_${cmssw_version}_tarball.tar.xz
+mv ${name}_${scram_arch}_${cmssw_version}_tarball.tar.xz ${PRODHOME}/${name}_${scram_arch}_${cmssw_version}_tarball.tar.xz
 
 echo "Gridpack created successfully at ${PRODHOME}/${name}_${scram_arch}_${cmssw_version}_tarball.tar.xz"
 echo "End of job"
