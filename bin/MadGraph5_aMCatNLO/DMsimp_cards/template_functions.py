@@ -1,11 +1,13 @@
 def extramodels(mPhi, mChi):
-    return """DMsimp_s_spin1.tar.gz"""
+    return """DMsimp_s_spin1.tar.gz
+"""
 
 def customize_cards(mPhi, mChi):
     return """# change mass parameters
 set param_card mass 55 {0:d}
 set param_card mass 18 {1:d}
-set param_card decay 55 auto""".format(int(mPhi), int(mChi))
+set param_card decay 55 auto
+""".format(int(mPhi), int(mChi))
 
 def run_card(mPhi, mChi):
     return """#***********************************************************************
@@ -169,7 +171,8 @@ def run_card(mPhi, mChi):
 # For aMCfast+APPLGRID use in PDF fitting (http://amcfast.hepforge.org)*
 #***********************************************************************
   0	= iappl ! aMCfast switch (0=OFF, 1=prepare grids, 2=fill grids)
-#***********************************************************************"""
+#***********************************************************************
+"""
 
 def proc_card(mPhi, mChi):
     return """
@@ -234,18 +237,18 @@ if __name__ == "__main__":
         os.makedirs(model)
 
     # Create the parameter dependent files
-    filename = os.path.join(model, "{}_customizecards.dat".format(model))
+    filename = os.path.join(model, "{0}_customizecards.dat".format(model))
     with open(os.path.join(filename), 'w') as f:
         f.write(customize_cards(mphi, mchi))
 
-    filename = os.path.join(model, "{}_extramodels.dat".format(model))
+    filename = os.path.join(model, "{0}_extramodels.dat".format(model))
     with open(os.path.join(filename), 'w') as f:
         f.write(extramodels(mphi, mchi))
 
-    filename = os.path.join(model, "{}_proc_card.dat".format(model))
+    filename = os.path.join(model, "{0}_proc_card.dat".format(model))
     with open(os.path.join(filename), 'w') as f:
         f.write(proc_card(mphi, mchi))
 
-    filename = os.path.join(model, "{}_run_card.dat".format(model))
+    filename = os.path.join(model, "{0}_run_card.dat".format(model))
     with open(os.path.join(filename), 'w') as f:
         f.write(run_card(mphi, mchi))
