@@ -1,5 +1,5 @@
 def extramodels(mPhi, mChi):
-    return """DMsimp_s_spin1_801.tar.gz"""
+    return """DMsimp_s_spin1.tar.gz"""
 
 def customize_cards(mPhi, mChi):
     return """# change mass parameters
@@ -202,7 +202,7 @@ set loop_color_flows False
 set gauge unitary
 set complex_mass_scheme False
 set max_npoint_for_channel 0
-import model DMsimp_s_spin1_801
+import model DMsimp_s_spin1
 define p = g u c d s u~ c~ d~ s~
 define j = g u c d s u~ c~ d~ s~
 define l+ = e+ mu+
