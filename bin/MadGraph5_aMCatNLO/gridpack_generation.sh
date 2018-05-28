@@ -277,6 +277,7 @@ if [ ! -d ${AFS_GEN_FOLDER}/${name}_gridpack ]; then
   cd ..
   
   #load extra models if needed
+  echo "Looking for extra models in ${CARDSDIR}/${name}_extramodels.dat"
   if [ -e $CARDSDIR/${name}_extramodels.dat ]; then
     echo "Loading extra models specified in $CARDSDIR/${name}_extramodels.dat"
     #strip comments
