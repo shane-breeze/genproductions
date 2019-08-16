@@ -1,0 +1,5 @@
+codegen_*.jdl
+codegen_*.sh
+input_*.tar.gz
+log_*.txt
+condor_log/
